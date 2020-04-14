@@ -1,30 +1,13 @@
-include(CheckIncludeFile)
-set(SOURCES
-    src/nfd_common.c
-    src/nfd_common.h
-    src/common.h)
+cmake_minimum_required(VERSION 3.12)
 
-macro(REQUIRE_INCLUDE_FILE path name)
-    CHECK_INCLUDE_FILE(${path} ${name})
-    if (NOT ${name})
-        message(FATAL_ERROR "${path} not found")
-    endif ()
-endmacro()
+project(nativefiledialog)
 
-# add specific implementations
-if (WIN32)
-    REQUIRE_INCLUDE_FILE(windows.h HAS_WINDOWS)
-    list(APPEND SOURCES src/nfd_win.cpp)
-elseif (APPLE)
-    REQUIRE_INCLUDE_FILE(AppKit/AppKit.h HAS_APPKIT)
-    list(APPEND SOURCES src/nfd_cocoa.m)
-elseif (UNIX)
-    REQUIRE_INCLUDE_FILE(gtk/gtk.h HAS_GTK)
-    list(APPEND SOURCES src/nfd_gtk.c)
-elseif (UNIX)
-    message(FATAL_ERROR "Cannot detect your system, please report to https://github.com/aarcangeli/nativefiledialog-cmake/issues")
-endif ()
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_library(nativefiledialog STATIC ${SOURCES})
+add_subdirectory(src)
 
-target_include_directories(nativefiledialog PUBLIC src/include)
+option(NFD_BUILD_UNIT_TESTS "Build the NFD unit tests" ON)
+
+if (NFD_BUILD_UNIT_TESTS)
+	add_subdirectory(test)
+endif()
