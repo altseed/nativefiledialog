@@ -1,5 +1,8 @@
 include(CheckIncludeFile)
-set(SOURCES src/nfd_common.c)
+set(SOURCES
+    src/nfd_common.c
+    src/nfd_common.h
+    src/common.h)
 
 macro(REQUIRE_INCLUDE_FILE path name)
     CHECK_INCLUDE_FILE(${path} ${name})
@@ -22,6 +25,6 @@ elseif (UNIX)
     message(FATAL_ERROR "Cannot detect your system, please report to https://github.com/aarcangeli/nativefiledialog-cmake/issues")
 endif ()
 
-add_library(nativefiledialog ${SOURCES})
+add_library(nativefiledialog STATIC ${SOURCES})
 
 target_include_directories(nativefiledialog PUBLIC src/include)
